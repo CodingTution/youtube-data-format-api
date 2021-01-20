@@ -1,0 +1,16 @@
+{
+  "name": "YoutubeApi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "https": "^1.0.0",
+    "video-url-link": "^0.1.5"
+  }
+}
