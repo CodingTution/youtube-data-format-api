@@ -1,9 +1,11 @@
 const httprequest = require('request');
-var http = require('http');
 const videoUrlLink = require('video-url-link');
 var responsearray = [];
 var array = [];
-http.createServer(function (request, response) {
+var express = require('express')
+var app = express()
+
+app.get('/', function (request, response) {
     var urlmain = __dirname + request.url;
     var query = gup('query', urlmain);
     var key = gup('key', urlmain);
@@ -31,7 +33,9 @@ http.createServer(function (request, response) {
             });
         }
     });
-}).listen(8080);
+})
+
+app.listen(3000)
 function gup(name, url) {
     if (!url) url = location.href;
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
