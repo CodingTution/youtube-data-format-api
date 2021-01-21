@@ -24,7 +24,8 @@ app.get('/', function (request, response) {
                                 formats: info.formats,
                             })
                             if (responsearray.length == 10) {
-                                response.send(JSON.stringify(responsearray))
+                                response.setHeader("Content-Type", "application/json")
+                                response.json(responsearray)
                             }
                         });
                     });
