@@ -3,12 +3,15 @@ const videoUrlLink = require('video-url-link');
 var responsearray = [];
 var array = [];
 var port = process.env.PORT || 3000
-var http = require('https');
-http.createServer(function (request, response) {
+var express = require('express')
+var app = express()
+
+app.get('/', function (request, response) {
     var urlmain = __dirname + request.url;
     var query = gup('query', urlmain);
     var key = gup('key', urlmain);
     var maxResults = gup('maxResults', urlmain);
+    response.writeHead(200, { 'Content-Type': 'text/html' });
     httprequest(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${query}&key=${key}`, function (error, res, body) {
         var responsebody = JSON.parse(body).items;
         if (responsebody != undefined) {
@@ -22,9 +25,7 @@ http.createServer(function (request, response) {
                                 formats: info.formats,
                             })
                             if (responsearray.length == 10) {
-                                response.writeHead(200, { 'Content-Type': 'text/json' });
-                                response.write(JSON.stringify(responsearray))
-                                response.end();
+                                response.send(JSON.stringify(responsearray));
                             }
                         });
                     });
@@ -32,7 +33,9 @@ http.createServer(function (request, response) {
             });
         }
     });
-}).listen(port);
+})
+
+app.listen(port)
 function gup(name, url) {
     if (!url) url = location.href;
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
