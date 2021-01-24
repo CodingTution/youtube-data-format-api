@@ -1,5 +1,5 @@
 var array = [];
-var port = process.env.PORT ||  3000;
+var port = process.env.PORT || 3000;
 var express = require("express");
 var app = express();
 const https = require('https');
@@ -15,7 +15,13 @@ app.get("/", function (request, response) {
             return body.replace(urlRegex, function (url) {
                 array.push(url)
                 if (array.length == 7) {
-                    response.send(array[3]);
+                    response.setHeader('Content-Type', 'application/json');
+                    response.json({
+                        "320 kbps": array[3],
+                        "256 kbps": array[4],
+                        "192 kbps": array[5],
+                        "128 kbps": array[6],
+                    });
                     array = [];
                 }
                 return '<a href="' + url + '">' + url + '</a>';
