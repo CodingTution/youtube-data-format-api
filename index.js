@@ -16,11 +16,13 @@ app.get("/", function (request, response) {
                 array.push(url)
                 if (array.length == 7) {
                     response.setHeader('Content-Type', 'application/json');
+                    var PATTERN = 'https://www.yt-download.org/download/',
+    filtered = array.filter(function (str) { return str.includes(PATTERN); });
                     response.json({
-                        "320 kbps": array[3],
-                        "256 kbps": array[4],
-                        "192 kbps": array[5],
-                        "128 kbps": array[6],
+                        "320 kbps": filtered[0],
+                        "256 kbps": filtered[1],
+                        "192 kbps": filtered[2],
+                        "128 kbps": filtered[3],
                     });
                     array = [];
                 }
