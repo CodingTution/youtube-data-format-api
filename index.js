@@ -1,54 +1,37 @@
-const httprequest = require("request");
-const videoUrlLink = require("video-url-link");
-var responsearray = [];
 var array = [];
-var port = process.env.PORT || 3000;
+var port = process.env.PORT ||  3000;
 var express = require("express");
 var app = express();
-
+const https = require('https');
 app.get("/", function (request, response) {
-  var urlmain = __dirname + request.url;
-  var query = gup("query", urlmain);
-  var key = gup("key", urlmain);
-  var maxResults = gup("maxResults", urlmain);
-  httprequest(
-    `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${query}&key=${key}`,
-    function (error, res, body) {
-      var responsebody = JSON.parse(body).items;
-      if (responsebody != undefined) {
-        responsebody.map((item, index) => {
-          array.push(item.id.videoId);
-          if (array.length == 10) {
-            array.map((item, index) => {
-              videoUrlLink.youtube.getInfo(
-                `https://youtu.be/${item}`,
-                { hl: "en" },
-                (error, info) => {
-                  responsearray.push({
-                    details: info.details,
-                    formats: info.formats
-                  });
-                  if (responsearray.length == 10) {
-                    response.setHeader("Content-Type", "application/json");
-                    response.json(responsearray);
-                    responsearray = [];
+    var urlmain = __dirname + request.url;
+    var id = gup("id", urlmain);
+    https.get(`https://www.yt-download.org/api/button/mp3/${id}`, (res) => {
+        console.log('statusCode:', res.statusCode);
+        console.log('headers:', res.headers);
+        res.setEncoding("utf-8");
+        res.on('data', (body) => {
+            var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+            return body.replace(urlRegex, function (url) {
+                array.push(url)
+                if (array.length == 7) {
+                    response.send(array[3]);
                     array = [];
-                  }
                 }
-              );
+                return '<a href="' + url + '">' + url + '</a>';
             });
-          }
         });
-      }
-    }
-  );
+
+    }).on('error', (e) => {
+        console.error(e);
+    });
 });
 
 app.listen(port);
 function gup(name, url) {
-  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regexS = "[\\?&]" + name + "=([^&#]*)";
-  var regex = new RegExp(regexS);
-  var results = regex.exec(url);
-  return results == null ? null : results[1];
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(url);
+    return results == null ? null : results[1];
 }
