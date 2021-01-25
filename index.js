@@ -6,7 +6,7 @@ const https = require('https');
 app.get("/", function (request, response) {
     var urlmain = __dirname + request.url;
     var id = gup("id", urlmain);
-    https.get(`https://www.yt-download.org/api/button/mp3/${id}`, (res) => {
+    https.get(`https://www.yt2mp3s.me/api/button/mp3/${id}`, (res) => {
         console.log('statusCode:', res.statusCode);
         console.log('headers:', res.headers);
         res.setEncoding("utf-8");
