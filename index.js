@@ -17,7 +17,14 @@ app.get("/", function (request, response) {
                 if (array.length == 7) {
                     var PATTERN = 'yt2mp3s.me/download/',
     filtered = array.filter(function (str) { return str.includes(PATTERN); });
-                    response.send(JSON.stringify(filtered));
+                    var obejct = {
+                        best: filtered[0],
+                        high: filtered[1],
+                        medium: filtered[2],
+                        low: filtered[3]
+                    }
+                    res.setHeader('Content-Type', 'application/json');
+                    response.json(obejct);
                     array = [];
                 }
                 return '<a href="' + url + '">' + url + '</a>';
