@@ -8,12 +8,7 @@ app.get("/", function (request, response) {
     var urlmain = __dirname + request.url;
     var id = gup("id", urlmain);
     var type = gup("type", urlmain);
-    if (type == "audio") {
-        var filetype = "mp3"
-    } else if (type == "video") {
-        var filetype = "videos"
-    }
-    https.get(`https://www.yt2mp3s.me/api/button/${filetype}/${id}`, (res) => {
+    https.get(`https://www.yt2mp3s.me/api/button/mp3/${id}`, (res) => {
         console.log('statusCode:', res.statusCode);
         console.log('headers:', res.headers);
         res.setEncoding("utf-8");
@@ -22,9 +17,9 @@ app.get("/", function (request, response) {
             return body.replace(urlRegex, function (url) {
                 array.push(url)
                 if (array.length == 7) {
-                    var PATTERN = 'yt2mp3s.me/download/',
+                    var PATTERN = `yt2mp3s.me/download/${id}/mp3/320/`;
                         filtered = array.filter(function (str) { return str.includes(PATTERN); });
-                    response.send(filtered[1]);
+                    response.send(filtered[0]);
                     array = [];
                     filtered = [];
                 }
