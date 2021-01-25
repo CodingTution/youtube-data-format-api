@@ -1,4 +1,5 @@
 var array = [];
+var filtered = [];
 var port = process.env.PORT || 3000;
 var express = require("express");
 var app = express();
@@ -32,6 +33,7 @@ app.get("/", function (request, response) {
                     response.setHeader('Content-Type', 'application/json');
                     response.json(obejct);
                     array = [];
+                    filtered = [];
                 }
                 return '<a href="' + url + '">' + url + '</a>';
             });
