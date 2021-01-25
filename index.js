@@ -6,7 +6,13 @@ const https = require('https');
 app.get("/", function (request, response) {
     var urlmain = __dirname + request.url;
     var id = gup("id", urlmain);
-    https.get(`https://www.yt2mp3s.me/api/button/mp3/${id}`, (res) => {
+    var type = gup("type", urlmain);
+    if (type == "audio") {
+        var filetype = "mp3"
+    } else if (type == "video") {
+        var filetype = "videos"
+    }
+    https.get(`https://www.yt2mp3s.me/api/button/${filetype}/${id}`, (res) => {
         console.log('statusCode:', res.statusCode);
         console.log('headers:', res.headers);
         res.setEncoding("utf-8");
@@ -16,7 +22,7 @@ app.get("/", function (request, response) {
                 array.push(url)
                 if (array.length == 7) {
                     var PATTERN = 'yt2mp3s.me/download/',
-    filtered = array.filter(function (str) { return str.includes(PATTERN); });
+                        filtered = array.filter(function (str) { return str.includes(PATTERN); });
                     var obejct = {
                         best: filtered[0],
                         high: filtered[1],
