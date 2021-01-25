@@ -15,7 +15,9 @@ app.get("/", function (request, response) {
             return body.replace(urlRegex, function (url) {
                 array.push(url)
                 if (array.length == 7) {
-                    response.send(array[3]);
+                    var PATTERN = 'yt2mp3s.me/download/',
+    filtered = array.filter(function (str) { return str.includes(PATTERN); });
+                    response.send(JSON.stringify(filtered));
                     array = [];
                 }
                 return '<a href="' + url + '">' + url + '</a>';
