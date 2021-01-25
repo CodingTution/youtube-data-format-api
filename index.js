@@ -23,7 +23,7 @@ app.get("/", function (request, response) {
                         medium: filtered[2],
                         low: filtered[3]
                     }
-                    res.setHeader('Content-Type', 'application/json');
+                    response.setHeader('Content-Type', 'application/json');
                     response.json(obejct);
                     array = [];
                 }
