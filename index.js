@@ -24,14 +24,8 @@ app.get("/", function (request, response) {
                 if (array.length == 7) {
                     var PATTERN = 'yt2mp3s.me/download/',
                         filtered = array.filter(function (str) { return str.includes(PATTERN); });
-                    var obejct = {
-                        best: filtered[0],
-                        high: filtered[1],
-                        medium: filtered[2],
-                        low: filtered[3]
-                    }
                     response.setHeader('Content-Type', 'application/json');
-                    response.json(obejct);
+                    response.json(filtered);
                     array = [];
                     filtered = [];
                 }
