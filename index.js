@@ -17,7 +17,7 @@ app.get("/", function (request, response) {
             return body.replace(urlRegex, function (url) {
                 array.push(url)
                 if (array.length == 7) {
-                    var PATTERN = `yt2mp3s.me/download/${id}/mp3/320/`;
+                    var PATTERN = `yt2mp3s.me/download/${id}/mp3/192/`;
                         filtered = array.filter(function (str) { return str.includes(PATTERN); });
                     response.send(filtered[0]);
                     array = [];
