@@ -1,8 +1,10 @@
+
 var array = [];
 var filtered = [];
 var port = process.env.PORT || 3000;
 var express = require("express");
 var app = express();
+const httprequest = require('request');
 const https = require('https');
 app.get("/", function (request, response) {
     var urlmain = __dirname + request.url;
@@ -18,8 +20,10 @@ app.get("/", function (request, response) {
                 array.push(url)
                 if (array.length == 7) {
                     var PATTERN = `yt2mp3s.me/download/${id}/mp3/192/`;
-                        filtered = array.filter(function (str) { return str.includes(PATTERN); });
-                    response.send(filtered[0]);
+                    filtered = array.filter(function (str) { return str.includes(PATTERN); });
+                    httprequest(`http://getmp3url.infinityfreeapp.com/?url=${filtered[0]}`, function (error, resp, body) {
+                        response.send(body);
+                    });
                     array = [];
                     filtered = [];
                 }
