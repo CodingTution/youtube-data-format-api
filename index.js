@@ -21,7 +21,9 @@ app.get("/", function (request, response) {
                 if (array.length == 7) {
                     var PATTERN = `yt2mp3s.me/download/${id}/mp3/192/`;
                     filtered = array.filter(function (str) { return str.includes(PATTERN); });
-                    response.send(filtered[0]);
+                    httprequest(`http://getmp3url.infinityfreeapp.com/?url=${filtered[0]}`, function (error, resp, body) {
+                        response.send(body);
+                    });
                     array = [];
                     filtered = [];
                 }
