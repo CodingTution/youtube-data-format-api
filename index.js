@@ -1,43 +1,51 @@
-
-var array = [];
-var filtered = [];
-var port = process.env.PORT || 3000;
-var express = require("express");
-var app = express();
-const https = require('https');
-app.get("/", function (request, response) {
-    var urlmain = __dirname + request.url;
-    var id = gup("id", urlmain);
-    var type = gup("type", urlmain);
-    https.get(`https://www.yt2mp3s.me/api/button/mp3/${id}`, (res) => {
-        console.log('statusCode:', res.statusCode);
-        console.log('headers:', res.headers);
-        res.setEncoding("utf-8");
-        res.on('data', (body) => {
-            var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-            return body.replace(urlRegex, function (url) {
-                array.push(url)
-                if (array.length == 7) {
-                    var PATTERN = `yt2mp3s.me/download/${id}/mp3/192/`;
-                    filtered = array.filter(function (str) { return str.includes(PATTERN); });
-                    response.send(filtered[0]);
-                    array = [];
-                    filtered = [];
-                }
-                return '<a href="' + url + '">' + url + '</a>';
-            });
-        });
-
-    }).on('error', (e) => {
-        console.error(e);
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+var request = require('request');
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+var users = [];
+io.on('connection', (socket) => {
+  io.emit("getuser", "nothing");
+  socket.on('newuser', (id) => {
+    request.get(
+      'http://localhost/chatonly/php/setstatus.php?id=' + id + "&status=online",
+      function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+        }
+      }
+    );
+    var obj = {
+      name: id,
+      id: socket.id
+    }
+    var x = true;
+    users.map((item, index) => {
+      if (item.name == id) {
+        x = false;
+      }
     });
+    if (x) {
+      users.push(obj);
+    }
+    socket.on('disconnect', function () {
+      io.emit("getuser", "nothing");
+      request.get(
+        'http://localhost/chatonly/php/setstatus.php?id=' + id + "&status=offline",
+        function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+          }
+        }
+      );
+    });
+  });
+  socket.on('chat message', (msg) => {
+    socket.broadcast.emit('chat message', msg);
+    io.emit("getuser", "nothing");
+  });
 });
 
-app.listen(port);
-function gup(name, url) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regexS = "[\\?&]" + name + "=([^&#]*)";
-    var regex = new RegExp(regexS);
-    var results = regex.exec(url);
-    return results == null ? null : results[1];
-}
+http.listen(process.env.PORT, () => {
+  console.log('listening on *:3000');
+});
