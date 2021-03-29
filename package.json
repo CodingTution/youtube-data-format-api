@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "https": "^1.0.0",
-    "request": "^2.88.2"
+    "express": "^4.16.4",
+    "request": "^2.88.2",
+    "socket.io": "^2.2.0"
   }
 }
